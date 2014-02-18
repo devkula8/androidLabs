@@ -86,11 +86,13 @@ public class ToDoListAdapter extends BaseAdapter {
 
 
 		//TODO - Get the current ToDoItem
-		final ToDoItem toDoItem = null;
-
+		final ToDoItem toDoItem = (ToDoItem) getItem(position);
+		
 		//TODO - Inflate the View for this ToDoItem
 		// from todo_item.xml.
 		RelativeLayout itemLayout = null;
+		//itemLayout = R.layout.todo_item;
+		View view = LayoutInflater.from(mContext).inflate(R.layout.todo_item, parent, false);
 		
 		//TODO - Fill in specific ToDoItem data
 		// Remember that the data that goes in this View
@@ -99,11 +101,12 @@ public class ToDoListAdapter extends BaseAdapter {
 
 		//TODO - Display Title in TextView
 
-		final TextView titleView = null;
-		
+		final TextView titleView = (TextView) view.findViewById(R.id.titleView); //null;
+		titleView.setText(toDoItem.getTitle());
 		// TODO - Set up Status CheckBox
 	
-		final CheckBox statusView = null;
+		final CheckBox statusView = (CheckBox) view.findViewById(R.id.statusCheckBox); //null;
+		statusView.setChecked(toDoItem.getStatus() == ToDoItem.Status.DONE);
 		
 		
 		statusView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -114,25 +117,27 @@ public class ToDoListAdapter extends BaseAdapter {
 				
 				// TODO - Set up and implement an OnCheckedChangeListener, which 
 				// is called when the user toggles the status checkbox
-
-
-			
+				if (isChecked) {
+					toDoItem.setStatus(ToDoItem.Status.DONE);
+				} else {
+					toDoItem.setStatus(ToDoItem.Status.NOTDONE);
+				}
 			}
 		});
 
 		//TODO - Display Priority in a TextView
 
-		final TextView priorityView = null;
-
+		final TextView priorityView = (TextView) view.findViewById(R.id.priorityView); //;
+		priorityView.setText(toDoItem.getPriority().toString());
 		
 		// TODO - Display Time and Date. 
 		// Hint - use ToDoItem.FORMAT.format(toDoItem.getDate()) to get date and time String
 
-		final TextView dateView = null;
-				
+		final TextView dateView = (TextView) view.findViewById(R.id.dateView); //null;
+		dateView.setText(ToDoItem.FORMAT.format(toDoItem.getDate()));		
 
 		// Return the View you just created
-		return itemLayout;
+		return view;
 
 	}
 	

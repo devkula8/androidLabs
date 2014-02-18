@@ -105,11 +105,10 @@ public class AddToDoActivity extends Activity {
 				log("Entered resetButton.OnClickListener.onClick()");
 
 				//TODO - Reset data fields to default values
+				mTitleText.setText("");
+				mDefaultStatusButton.setChecked(true);
+				mDefaultPriorityButton.setChecked(true);			
 				setDefaultDateTime();
-
-			
-			
-			
 			}
 		});
 
@@ -126,13 +125,13 @@ public class AddToDoActivity extends Activity {
 				
 				//TODO - Get Priority
 				Priority priority = null;
-
+				priority = getPriority();
 				//TODO -  Get Status
 				Status status = null;
-
+				status = getStatus();
 				//TODO -  Title
 				String titleString = null;
-
+				titleString = mTitleText.getText().toString();
 				// Date
 				String fullDate = dateString + " " + timeString;
 
@@ -141,10 +140,8 @@ public class AddToDoActivity extends Activity {
 				ToDoItem.packageIntent(data, titleString, priority, status, fullDate);
 
 				//TODO - return data Intent and finish
-				
-
-				
-				
+				setResult(RESULT_OK, data);
+				finish();				
 			}
 		});
 	}
@@ -203,27 +200,27 @@ public class AddToDoActivity extends Activity {
 	private Priority getPriority() {
 
 		switch (mPriorityRadioGroup.getCheckedRadioButtonId()) {
-		case R.id.lowPriority: {
-			return Priority.LOW;
-		}
-		case R.id.highPriority: {
-			return Priority.HIGH;
-		}
-		default: {
-			return Priority.MED;
-		}
+			case R.id.lowPriority: {
+				return Priority.LOW;
+			}
+			case R.id.highPriority: {
+				return Priority.HIGH;
+			}
+			default: {
+				return Priority.MED;
+			}
 		}
 	}
 
 	private Status getStatus() {
 
 		switch (mStatusRadioGroup.getCheckedRadioButtonId()) {
-		case R.id.statusDone: {
-			return Status.DONE;
-		}
-		default: {
-			return Status.NOTDONE;
-		}
+			case R.id.statusDone: {
+				return Status.DONE;
+			}
+			default: {
+				return Status.NOTDONE;
+			}
 		}
 	}
 
