@@ -29,9 +29,11 @@ public class MainActivity extends Activity implements SelectionListener {
 	public static final String DATA_REFRESHED_ACTION = "course.labs.notificationslab.DATA_REFRESHED";
 	
 	private static final int NUM_FRIENDS = 3;
-	private static final String URL_LGAGA = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Fladygaga.txt";
-	private static final String URL_RBLACK = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Frebeccablack.txt";
-	private static final String URL_TSWIFT = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Ftaylorswift.txt";
+	//private static final String URL_LGAGA = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Fladygaga.txt";
+	//private static final String URL_RBLACK = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Frebeccablack.txt";
+	private static final String URL_LGAGA = "http://10.77.230.87/web%2FDev%2Fladygaga.txt";
+	private static final String URL_RBLACK = "http://10.77.230.87/web%2FDev%2Frebeccablack.txt";	
+	private static final String URL_TSWIFT = "http://10.77.230.87/web%2FDev%2Ftaylorswift.txt";
 	private static final String TAG = "Lab-Notifications";
 	private static final long TWO_MIN = 2 * 60 * 1000;
 	private static final int UNSELECTED = -1;
@@ -78,7 +80,7 @@ public class MainActivity extends Activity implements SelectionListener {
 	private void ensureData() {
 
 		log("In ensureData(), mIsFresh:" + mIsFresh);
-
+		mIsFresh = false;
 		if (!mIsFresh) {
 
 			// TODO:
