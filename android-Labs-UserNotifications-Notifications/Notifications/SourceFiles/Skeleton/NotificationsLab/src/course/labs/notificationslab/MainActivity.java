@@ -80,7 +80,7 @@ public class MainActivity extends Activity implements SelectionListener {
 	private void ensureData() {
 
 		log("In ensureData(), mIsFresh:" + mIsFresh);
-		mIsFresh = false;
+		//mIsFresh = false;
 		if (!mIsFresh) {
 
 			// TODO:
