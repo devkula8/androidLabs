@@ -46,6 +46,8 @@ public class MainActivity extends Activity implements SelectionListener {
 	private FeedFragment mFeedFragment;
 	private String[] mRawFeeds = new String[3];
 	private String[] mProcessedFeeds = new String[3];
+	
+	private boolean isReceiverRegistered = false;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +94,8 @@ public class MainActivity extends Activity implements SelectionListener {
 			
 			// TODO:
 			// Start new AsyncTask to download Tweets from network
-			new DownloaderTask(this).execute(URL_LGAGA, URL_RBLACK, URL_TSWIFT);
-
+			//new DownloaderTask(this).execute(URL_LGAGA, URL_RBLACK, URL_TSWIFT);
+			new DownloaderTask(this).execute(URL_TSWIFT, URL_RBLACK, URL_LGAGA);
 
 			
 			// Set up a BroadcastReceiver to receive an Intent when download
@@ -108,10 +110,17 @@ public class MainActivity extends Activity implements SelectionListener {
 					// Check to make sure this is an ordered broadcast
 					// Let sender know that the Intent was received
 					// by setting result code to RESULT_OK
-
+					setResultCode (Activity.RESULT_OK);
 
 				}
 			};
+		   if (!isReceiverRegistered) {
+				IntentFilter intentFilter = new IntentFilter(DATA_REFRESHED_ACTION);
+				intentFilter.setPriority(3);
+				registerReceiver(mRefreshReceiver, intentFilter);
+		        isReceiverRegistered = true;
+		    }		
+			
 
 		} else {
 
@@ -182,9 +191,12 @@ public class MainActivity extends Activity implements SelectionListener {
 		// TODO:
 		// Register the BroadcastReceiver to receive a 
 		// DATA_REFRESHED_ACTION broadcast
-		registerReceiver(mRefreshReceiver, new IntentFilter("DATA_REFRESHED_ACTION"));
-
-		
+		   if (!isReceiverRegistered) {
+				IntentFilter intentFilter = new IntentFilter(DATA_REFRESHED_ACTION);
+				intentFilter.setPriority(3);
+				registerReceiver(mRefreshReceiver, intentFilter);
+		        isReceiverRegistered = true;
+		    }		
 	}
 
 	@Override
@@ -192,12 +204,19 @@ public class MainActivity extends Activity implements SelectionListener {
 
 		// TODO:
 		// Unregister the BroadcastReceiver
-		unregisterReceiver(mRefreshReceiver);
+		//unregisterReceiver(mRefreshReceiver);
 
 		
 		
 		super.onPause();
-
+		if (isReceiverRegistered) {
+	        try {
+	            unregisterReceiver(mRefreshReceiver);
+	        } catch (IllegalArgumentException e) {
+	            // Do nothing
+	        }
+	        isReceiverRegistered = false;
+	    }
 	}
 
 	// Convert raw Tweet data (in JSON format) into text for display
