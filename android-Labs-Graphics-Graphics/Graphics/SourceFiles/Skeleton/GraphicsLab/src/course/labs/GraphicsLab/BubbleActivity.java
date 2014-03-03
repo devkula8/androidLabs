@@ -133,11 +133,14 @@ public class BubbleActivity extends Activity {
 				// TODO - Implement onFling actions.
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
-
-				
-				
-				
-				return false;
+            	for(int i=0; i < mFrame.getChildCount(); i++) {
+                    BubbleView bubble = (BubbleView) mFrame.getChildAt(i);
+                    if(bubble.intersects(event1.getX(), event1.getY())) {
+                    	bubble.deflect(velocityX, velocityY);
+                        return true;
+                    }
+                }
+				return true;
 				
 			}
 
@@ -151,21 +154,19 @@ public class BubbleActivity extends Activity {
 				// TODO - Implement onSingleTapConfirmed actions.
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
-				if(mFrame.getChildCount() == 0) {
-
-	                BubbleView bubble = new BubbleView(getApplicationContext(),
-	                		event.getX(),
-	                		event.getY());
-	                mFrame.addView(bubble);
-
-	            } else {
-
-	                BubbleView bubble = new BubbleView(getApplicationContext(),
-	                		event.getX(),
-	                		event.getY());
-	                mFrame.addView(bubble);
-
-	            }
+            	for(int i=0; i < mFrame.getChildCount(); i++) {
+                    BubbleView bubble = (BubbleView) mFrame.getChildAt(i);
+                    //log("bubble.intersects(event.getX(), event.getY()): " + bubble.intersects(event.getX(), event.getY()));
+                    if(bubble.intersects(event.getX(), event.getY())) {
+                    	bubble.stop(true);
+                        mFrame.removeViewAt(i);
+                        return true;
+                    }
+                }
+                BubbleView bubble = new BubbleView(getApplicationContext(),
+                		event.getX(),
+                		event.getY());
+                mFrame.addView(bubble);
 				return true;
 			}
 		});
@@ -230,7 +231,7 @@ public class BubbleActivity extends Activity {
 			
 			// Set the BubbleView's rotation
 			setRotation(r);
-			log("Creating Bubble at: mDx:" + mDx + " mDy:" + mDy + " mDRotate:" + mDRotate);
+			//log("Creating Bubble at: mDx:" + mDx + " mDy:" + mDy + " mDRotate:" + mDRotate);
 			mPainter.setAntiAlias(true);
 			start();
 		}
@@ -240,8 +241,7 @@ public class BubbleActivity extends Activity {
 			if (speedMode == RANDOM) {
 				
 				// TODO - set rotation in range [1..3]
-				mDRotate = (long)Math.floor(r.nextFloat() * 3 + 1);
-				
+				mDRotate = r.nextInt(3) + 1;
 			} else {
 			
 				mDRotate = 0;
@@ -273,8 +273,9 @@ public class BubbleActivity extends Activity {
 				// TODO - Set movement direction and speed
 				// Limit movement speed in the x and y
 				// direction to [-3..3].
-				mDx = r.nextFloat()*6 - 3;
-				mDy = r.nextFloat()*6 - 3;
+				 
+				mDx = r.nextInt(7) - 3;
+				mDy = r.nextInt(7) - 3;
 			}
 		}
 
@@ -287,7 +288,7 @@ public class BubbleActivity extends Activity {
 			} else {
 			
 				//TODO - set scaled bitmap size in range [1..3] * BITMAP_SIZE
-				mScaledBitmapWidth = (int)((r.nextFloat() * 2 + 1) * BITMAP_SIZE);
+				mScaledBitmapWidth =  ((r.nextInt(3) + 1) * BITMAP_SIZE);
 			}
 
 			// TODO - create the scaled bitmap using size set above
@@ -351,16 +352,13 @@ public class BubbleActivity extends Activity {
 					public void run() {
 						
 						// TODO - Remove the BubbleView from mFrame
-						//mFrame.removeView(this);
-
-						
 						
 						if (popped) {
 							log("Pop!");
 
 							// TODO - If the bubble was popped by user,
 							// play the popping sound
-
+							mSoundPool.play(mSoundID, mStreamVolume, mStreamVolume, 1, 0, 1.0f);
 						
 						}
 
@@ -391,11 +389,11 @@ public class BubbleActivity extends Activity {
 			canvas.save(Canvas.MATRIX_SAVE_FLAG);
 
 			// TODO - increase the rotation of the original image by mDRotate
-			mRotate = mRotate + mDRotate;
+			//mRotate = mRotate + mDRotate;
 
 			
 			// TODO Rotate the canvas by current rotation
-			canvas.rotate(mRotate);
+			canvas.rotate(mRotate, mXPos, mYPos);
 			
 			
 			// TODO - draw the bitmap at it's new location
