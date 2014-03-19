@@ -234,8 +234,9 @@ public class StoryViewFragment extends Fragment {
 				public void onClick(View v) {
 					
 					// TODO - Play the ringtone
-					
-
+					if (!ringtone.isPlaying()) {
+						ringtone.play();
+					}
 					
 				}
 			});
@@ -248,23 +249,23 @@ public class StoryViewFragment extends Fragment {
 			// and the video view already set up in the layout file.
 			
 			// TODO - Create a new MediaController for this activity 
-		
+			final MediaController mediaController = new MediaController(getActivity());
 
 			// TODO - The MediaController needs an anchorview. Anchor the Media Controller
 			// to the VideoView, videoLinkView, with the function setAnchorView()
-			
+			mediaController.setAnchorView(videoLinkView);
 			
 			
 			// TODO - Now the VideoView, videoLinkView, needs to have a Media Controller set to it
 			// use the setMediaController function from the VideoView to set it to the new Media Controller
-			
+			videoLinkView.setMediaController(mediaController);
 			
 			// TODO - Now we need to set the URI for the VideoView, use the setVideoURI function on the
 			//  videoLinkPath string from before.
-			
+			videoLinkView.setVideoURI(Uri.parse(videoLinkPath));
 			
 			// TODO - Start the video, using the start function on the VideoView
-			
+			videoLinkView.start();
 			
 			// Display the image data
 			
@@ -274,7 +275,7 @@ public class StoryViewFragment extends Fragment {
 			
 			// TODO - Set the URI of the ImageView to the image path stored in the string
 			// imageMetaDataPath, using the setImageURI function from the ImageView
-			
+			imageMetaDataView.setImageURI(Uri.parse(imageMetaDataPath));
 			
 			
 			Long time = Long.valueOf(storyData.storyTime);
