@@ -7,8 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -16,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,13 +73,16 @@ public class PlaceViewAdapter extends CursorAdapter {
 		// the current set of PlaceRecords. Use the 
 		// getPlaceRecordFromCursor() method to add the
 		// current place to the list
-		
+			list.clear();
 
-            
-            
-            
-            
-            
+            if(newCursor.moveToFirst())
+            {
+                do {
+                    PlaceRecord pr = getPlaceRecordFromCursor(newCursor);
+                    list.add(pr);
+                } while (newCursor.moveToNext());
+            }
+
             // Set the NotificationURI for the new cursor
 			newCursor.setNotificationUri(mContext.getContentResolver(),
 					PlaceBadgesContract.CONTENT_URI);
@@ -147,12 +154,28 @@ public class PlaceViewAdapter extends CursorAdapter {
 
 			// TODO - Insert new record into the ContentProvider
 
-			
+			ContentResolver contentResolver = mContext.getContentResolver();
+            ArrayList<ContentProviderOperation> batchOperation = new ArrayList<ContentProviderOperation>();
+            batchOperation.add(ContentProviderOperation.newInsert(PlaceBadgesContract.CONTENT_URI)
+                    .withValue(PlaceBadgesContract.COUNTRY_NAME, listItem.getCountryName())
+                    .withValue(PlaceBadgesContract.PLACE_NAME, listItem.getPlace())
+                    .withValue(PlaceBadgesContract.LAT, listItem.getLat())
+                    .withValue(PlaceBadgesContract.LON, listItem.getLon())
+                    .withValue(PlaceBadgesContract.FLAG_BITMAP_PATH, listItem.getFlagBitmapPath())
+                    .build()
+            );
 
-		
-        
-        
-        
+            try {
+
+                // Apply all batched operations
+                contentResolver.applyBatch(PlaceBadgesContract.AUTHORITY,
+                        batchOperation);
+
+            } catch (RemoteException e) {
+                //Log.i(TAG, "RemoteException");
+            } catch (OperationApplicationException e) {
+                //Log.i(TAG, "RemoteException");
+            }
         }
 
 	}
@@ -166,11 +189,8 @@ public class PlaceViewAdapter extends CursorAdapter {
 		list.clear();
 
 		// TODO - delete all records in the ContentProvider
-
-
-        
-        
-        
+		ContentResolver contentResolver = mContext.getContentResolver();
+        contentResolver.delete(PlaceBadgesContract.CONTENT_URI, null, null);
 	}
 
 	@Override

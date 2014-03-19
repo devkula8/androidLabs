@@ -1,0 +1,4 @@
+03-17 22:30:03.308: I/Lab-ContentProvider(2105): Entered onCreateLoader()
+03-17 22:30:12.348: I/Lab-ContentProvider(2105): Entered footerView.OnClickListener.onClick()
+03-17 22:30:12.458: I/Lab-ContentProvider(2105): Starting Place Download
+03-17 22:30:13.038: I/Lab-ContentProvider(2105): Entered addNewPlace()
